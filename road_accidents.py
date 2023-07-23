@@ -35,6 +35,88 @@ days_of_the_week = []
 months = []
 
 
+def fill_blank(any_string):
+    if any_string == "":
+        any_string = "UNKNOWN"
+    
+    return any_string
+
+
+def format_string(raw_string, category=False):
+    if category == "road":
+        raw_string = raw_string.strip()
+        if raw_string[-2:] == "RD":
+            raw_string = raw_string.replace(raw_string[-2:], "ROAD")
+        elif raw_string[-3:] == "RDD":
+            raw_string = raw_string.replace(raw_string[-3:], "ROAD")
+        
+        if raw_string[-4:] == "ROAD":
+            raw_string = raw_string.replace(raw_string[-4:], "").strip()
+
+        if "'" in raw_string:
+            raw_string = raw_string.replace("'", "")
+        if "BY PASS" in raw_string:
+            raw_string = raw_string.replace("BY PASS", "BYPASS")
+        if "BY-PASS" in raw_string:
+            raw_string = raw_string.replace("BY-PASS", "BYPASS")    
+        if "SERVICE LANE" in raw_string:
+            raw_string = raw_string.replace("SERVICE LANE", "")
+        if " BAY" in raw_string:
+            raw_string = raw_string.replace(" BAY", "BAY")
+        if "HIGH " in raw_string:
+            raw_string = raw_string.replace("HIGH ", "HIGH")
+        if "SUPER" in raw_string:
+            raw_string = raw_string.replace("SUPER", "SUPER ")
+        if "OLD " in raw_string:
+            raw_string = raw_string.replace("OLD ", "OLD")
+        if "  " in raw_string:
+            raw_string = raw_string.replace("  ", " ")
+        
+        words = ["STREET", "AVENUE", "DRIVE", "SCHOOL", "CHURCH", "ALONG", "WITHIN"]
+        for word in words:
+            if word not in raw_string:
+                if raw_string.find(" ") != -1:
+                    i = raw_string.find(" ")
+                    raw_string = raw_string.replace(raw_string[i:i+1], "-")
+      
+        if " - " in raw_string:
+            raw_string = raw_string.replace(" - ", "-")
+        if "--" in raw_string:
+            raw_string = raw_string.replace("--", "-")
+
+        hyphen_words = ["-ROAD" , "-MURRAM", "-ACCESS", "-BYPASS", "-TOWNSHIP", "-WAY", "-BYPASS", "-SUPER-HIGHWAY"]
+        for word in hyphen_words:
+            if word in raw_string:
+                raw_string = raw_string.replace(word, word.replace("-"," "))
+        
+        if "BAY" in raw_string:
+            raw_string = raw_string.replace("BAY", " BAY")
+        if "OLD" in raw_string:
+            raw_string = raw_string.replace("OLD", "OLD ")
+        if raw_string[0:4] == "ALONG":
+            raw_string = raw_string.replace("ALONG", "")
+        if raw_string[0:5] == "WITHIN":
+            raw_string = raw_string.replace("WITHIN", "")
+        if "HAILE" in raw_string:
+            raw_string = " HAILE SELASIE AVENUE"
+        
+        final_string = raw_string.strip()
+
+        return final_string
+
+
+def convert_cause_code(code):
+    pass
+
+def fill_blank_time(time_string):
+    time_string = time_string.replace(" ","")
+
+    if "UNKNOWN" in time_string or not(any(char.isdigit() for char in time_string)) or time_string == "":
+        time_string = "UNKNOWN"
+    
+    return time_string
+
+
 def format_time_date(time_string, f): 
     date_time = ""
 
@@ -110,87 +192,8 @@ def format_time_date(time_string, f):
             date_time = "December"
 
         return date_time
-
-
-def fill_blank_time(time_string):
-    time_string = time_string.replace(" ","")
-
-    if "UNKNOWN" in time_string or not(any(char.isdigit() for char in time_string)) or time_string == "":
-        time_string = "UNKNOWN"
     
-    return time_string
-
-
-def fill_blank(any_string):
-    if any_string == "":
-        any_string = "UNKNOWN"
     
-    return any_string
-
-
-def format_string(raw_string, category=False):
-    if category == "road":
-        raw_string = raw_string.strip()
-        if raw_string[-2:] == "RD":
-            raw_string = raw_string.replace(raw_string[-2:], "ROAD")
-        elif raw_string[-3:] == "RDD":
-            raw_string = raw_string.replace(raw_string[-3:], "ROAD")
-        
-        if raw_string[-4:] == "ROAD":
-            raw_string = raw_string.replace(raw_string[-4:], "").strip()
-
-        if "'" in raw_string:
-            raw_string = raw_string.replace("'", "")
-        if "BY PASS" in raw_string:
-            raw_string = raw_string.replace("BY PASS", "BYPASS")
-        if "BY-PASS" in raw_string:
-            raw_string = raw_string.replace("BY-PASS", "BYPASS")    
-        if "SERVICE LANE" in raw_string:
-            raw_string = raw_string.replace("SERVICE LANE", "")
-        if " BAY" in raw_string:
-            raw_string = raw_string.replace(" BAY", "BAY")
-        if "HIGH " in raw_string:
-            raw_string = raw_string.replace("HIGH ", "HIGH")
-        if "SUPER" in raw_string:
-            raw_string = raw_string.replace("SUPER", "SUPER ")
-        if "OLD " in raw_string:
-            raw_string = raw_string.replace("OLD ", "OLD")
-        if "  " in raw_string:
-            raw_string = raw_string.replace("  ", " ")
-        
-        words = ["STREET", "AVENUE", "DRIVE", "SCHOOL", "CHURCH", "ALONG", "WITHIN"]
-        for word in words:
-            if word not in raw_string:
-                if raw_string.find(" ") != -1:
-                    i = raw_string.find(" ")
-                    raw_string = raw_string.replace(raw_string[i:i+1], "-")
-      
-        if " - " in raw_string:
-            raw_string = raw_string.replace(" - ", "-")
-        if "--" in raw_string:
-            raw_string = raw_string.replace("--", "-")
-
-        hyphen_words = ["-ROAD" , "-MURRAM", "-ACCESS", "-BYPASS", "-TOWNSHIP", "-WAY", "-BYPASS", "-SUPER-HIGHWAY"]
-        for word in hyphen_words:
-            if word in raw_string:
-                raw_string = raw_string.replace(word, word.replace("-"," "))
-        
-        if "BAY" in raw_string:
-            raw_string = raw_string.replace("BAY", " BAY")
-        if "OLD" in raw_string:
-            raw_string = raw_string.replace("OLD", "OLD ")
-        if raw_string[0:4] == "ALONG":
-            raw_string = raw_string.replace("ALONG", "")
-        if raw_string[0:5] == "WITHIN":
-            raw_string = raw_string.replace("WITHIN", "")
-        if "HAILE" in raw_string:
-            raw_string = " HAILE SELASIE AVENUE"
-        
-        final_string = raw_string.strip()
-
-        return final_string
-
-
 def populate_lists(filename):
     try:
         with open(filename, mode="rt") as accidents_database:
@@ -252,6 +255,7 @@ def populate_lists(filename):
                 
                 cause = accident_record[CAUSE_CODE]
                 cause = fill_blank(cause)
+                # cause = convert_cause_code(cause)
                 causes.append(cause)
                 
                 road_user_cat = accident_record[ROAD_USER_CAT].upper()
@@ -293,6 +297,9 @@ def populate_lists(filename):
     except csv.Error as csv_err:
         print(csv_err.__class__.__name__, csv_err, sep=": ")
         print(f"Source: filename '{filename}', line {count}")
+    
+    except StopIteration as stopit_err:
+        print(stopit_err.__class__.__name__, stopit_err, sep=": ")
 
 
 def count_accidents(accident_data_list):
@@ -306,29 +313,30 @@ def count_accidents(accident_data_list):
 
 
 def unpack_plot_values(x_list, y_list):
-    y_sub_list = []
-    outer_dict = {}
-    keys = frozenset(x_list)
-    for key in keys:
+    if len(x_list) == len(y_list):
         y_sub_list = []
-        for i in range(len(x_list)):
-            if x_list[i] == key:
-                y_sub_list.append(y_list[i])
+        outer_dict = {}
+        keys = frozenset(x_list)
+        for key in keys:
+            y_sub_list = []
+            for i in range(len(x_list)):
+                if x_list[i] == key:
+                    y_sub_list.append(y_list[i])
 
-        #print(key, y_sub_list)
-        inner_keys = frozenset(y_sub_list)
-        inner_dict = {}
-        for inner_key in inner_keys:
-            values = y_sub_list.count(inner_key)
-            inner_dict.update({inner_key: values})
-            #print(key, inner_key, values)
-            #print(dict1)
-                
-        outer_dict[key] = inner_dict
+            #print(key, y_sub_list)
+            inner_keys = frozenset(y_sub_list)
+            inner_dict = {}
+            for inner_key in inner_keys:
+                values = y_sub_list.count(inner_key)
+                inner_dict.update({inner_key: values})
+                #print(key, inner_key, values)
+                #print(dict1)
+                    
+            outer_dict[key] = inner_dict
 
-        #print(key, dict1)
-    #print(dict2)
-    return outer_dict
+            #print(key, dict1)
+        #print(dict2)
+        return outer_dict
 
 
 def plot_graph(x_list, x_label, y_list=False, y_label=False, chart_type="line"):
