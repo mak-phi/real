@@ -108,4 +108,34 @@ class TestCountAccidents:
 
     # Tests that a list with string keys returns a dictionary with count of accidents for each key
     def test_string_keys(self):
-        assert count_accidents(['a', 'b', 'c', 'a']) == {'a': 2, 'b': 1, 'c': 1}    
+        assert count_accidents(['a', 'b', 'c', 'a']) == {'a': 2, 'b': 1, 'c': 1}
+
+
+class TestUnpackPlotValues:
+    # Tests that the function works correctly when x_list and y_list are of equal length
+    def test_happy_path_equal_length(self):
+        x_list = [1, 2, 3, 4, 5]
+        y_list = [1, 2, 3, 4, 5]
+        expected_output = {1: {1: 1}, 2: {2: 1}, 3: {3: 1}, 4: {4: 1}, 5: {5: 1}}
+        assert unpack_plot_values(x_list, y_list) == expected_output
+
+    # Tests that the function works correctly when x_list and y_list have length 1
+    def test_happy_path_length_one(self):
+        x_list = [1]
+        y_list = [1]
+        expected_output = {1: {1: 1}}
+        assert unpack_plot_values(x_list, y_list) == expected_output
+
+    # Tests that the function works correctly when x_list and y_list have length 0
+    def test_happy_path_length_zero(self):
+        x_list = []
+        y_list = []
+        expected_output = {}
+        assert unpack_plot_values(x_list, y_list) == expected_output
+
+    # Tests that the function raises a TypeError when x_list and y_list have different lengths
+    def test_edge_case_different_lengths(self):
+        x_list = [1, 2, 3]
+        y_list = [1, 2]
+        with pytest.raises(TypeError):
+            unpack_plot_values(x_list, y_list)

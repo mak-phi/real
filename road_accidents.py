@@ -337,6 +337,9 @@ def unpack_plot_values(x_list, y_list):
             #print(key, dict1)
         #print(dict2)
         return outer_dict
+    
+    else:
+        raise TypeError(f"Length of x_list ({len(x_list)}) is not equal to length of y_list ({len(y_list)})")
 
 
 def plot_graph(x_list, x_label, y_list=False, y_label=False, chart_type="line"):
