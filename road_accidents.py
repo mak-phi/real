@@ -36,15 +36,15 @@ months = []
 
 
 def fill_blank(any_string):
-    if any_string == "":
+    if any_string == None or any_string.strip() == "":
         any_string = "UNKNOWN"
     
     return any_string
 
 
-def format_string(raw_string, category=False):
+def format_road_string(raw_string, category=False):
     if category == "road":
-        raw_string = raw_string.strip()
+        raw_string = raw_string.upper().strip()
         if raw_string[-2:] == "RD":
             raw_string = raw_string.replace(raw_string[-2:], "ROAD")
         elif raw_string[-3:] == "RDD":
@@ -55,36 +55,68 @@ def format_string(raw_string, category=False):
 
         if "'" in raw_string:
             raw_string = raw_string.replace("'", "")
+        if "/" in raw_string:
+            raw_string = raw_string.replace("/", "")
+        if "SERVICE LANE" in raw_string:
+            raw_string = raw_string.replace("SERVICE LANE", "").strip()
+        if raw_string[0:5] == "ALONG":
+            raw_string = raw_string.replace("ALONG", "").strip()
+        if raw_string[0:6] == "WITHIN":
+            raw_string = raw_string.replace("WITHIN", "").strip()
+
+        if "-" in raw_string:
+            raw_string = raw_string.replace("-", " ")
+        if "  " in raw_string:
+            raw_string = raw_string.replace("  ", " ")
+        if "   " in raw_string:
+            raw_string = raw_string.replace("   ", " ")
+        '''
+        if " - " in raw_string:
+            raw_string = raw_string.replace(" - ", "-")
+        if " -" in raw_string:
+            raw_string = raw_string.replace(" -", "-")
+        if "- " in raw_string:
+            raw_string = raw_string.replace("- ", "-")
+        ''' 
         if "BY PASS" in raw_string:
             raw_string = raw_string.replace("BY PASS", "BYPASS")
-        if "BY-PASS" in raw_string:
-            raw_string = raw_string.replace("BY-PASS", "BYPASS")    
-        if "SERVICE LANE" in raw_string:
-            raw_string = raw_string.replace("SERVICE LANE", "")
+        #if "BY-PASS" in raw_string:
+        #    raw_string = raw_string.replace("BY-PASS", "BYPASS")    
         if " BAY" in raw_string:
             raw_string = raw_string.replace(" BAY", "BAY")
         if "HIGH " in raw_string:
             raw_string = raw_string.replace("HIGH ", "HIGH")
+        if "HIGHSCHOOL" in raw_string:
+            raw_string = raw_string.replace("HIGHSCHOOL", "HIGH SCHOOL")
+        if "TOWN " in raw_string:
+            raw_string = raw_string.replace("TOWN ", "TOWN")
         if "SUPER" in raw_string:
-            raw_string = raw_string.replace("SUPER", "SUPER ")
+            raw_string = raw_string.replace("SUPER ", "SUPER")
+            raw_string = raw_string.replace("SUPERHIGHWAY", "").strip()
         if "OLD " in raw_string:
             raw_string = raw_string.replace("OLD ", "OLD")
-        if "  " in raw_string:
-            raw_string = raw_string.replace("  ", " ")
+        if "MSA-" in raw_string:
+            raw_string = raw_string.replace("MSA-", "MOMBASA-")
+        if "NRB" in raw_string:
+            raw_string = raw_string.replace("NRB", "NAIROBI")
+        if " " in raw_string:
+            raw_string = raw_string.replace(" ", " ")
         
-        words = ["STREET", "AVENUE", "DRIVE", "SCHOOL", "CHURCH", "ALONG", "WITHIN"]
-        for word in words:
-            if word not in raw_string:
-                if raw_string.find(" ") != -1:
-                    i = raw_string.find(" ")
-                    raw_string = raw_string.replace(raw_string[i:i+1], "-")
+        words = ["STREET", "AVENUE", "DRIVE", "WAY", "HIGHWAY", "BYPASS", "ACCESS", "COURSE", "SCHOOL", "CHURCH", "TOWN", "FERRY", "BEACH", "CENTRE"]
+        
+        res = [word for word in words if (word in raw_string)]
+        if bool(res):
+            raw_string = raw_string
+        else:
+            if raw_string.find(" ") != -1:
+                i = raw_string.find(" ")
+                raw_string = raw_string.replace(raw_string[i:i+1], "-")
+            raw_string = raw_string + " ROAD"
       
-        if " - " in raw_string:
-            raw_string = raw_string.replace(" - ", "-")
         if "--" in raw_string:
             raw_string = raw_string.replace("--", "-")
 
-        hyphen_words = ["-ROAD" , "-MURRAM", "-ACCESS", "-BYPASS", "-TOWNSHIP", "-WAY", "-BYPASS", "-SUPER-HIGHWAY"]
+        hyphen_words = ["-MURRAM"]
         for word in hyphen_words:
             if word in raw_string:
                 raw_string = raw_string.replace(word, word.replace("-"," "))
@@ -93,14 +125,11 @@ def format_string(raw_string, category=False):
             raw_string = raw_string.replace("BAY", " BAY")
         if "OLD" in raw_string:
             raw_string = raw_string.replace("OLD", "OLD ")
-        if raw_string[0:4] == "ALONG":
-            raw_string = raw_string.replace("ALONG", "")
-        if raw_string[0:5] == "WITHIN":
-            raw_string = raw_string.replace("WITHIN", "")
+        
         if "HAILE" in raw_string:
             raw_string = " HAILE SELASIE AVENUE"
         
-        final_string = raw_string.strip()
+        final_string = raw_string.upper().strip()
 
         return final_string
 
@@ -109,20 +138,21 @@ def convert_cause_code(code):
     pass
 
 def fill_blank_time(time_string):
-    time_string = time_string.replace(" ","")
-
-    if "UNKNOWN" in time_string or not(any(char.isdigit() for char in time_string)) or time_string == "":
+    if time_string == None or time_string.strip() == "" or not(any(char.isdigit() for char in time_string)) or "UNKNOWN" in time_string:
         time_string = "UNKNOWN"
     
     return time_string
 
 
-def format_time_date(time_string, f): 
+def format_time_date(time_string, f):
     date_time = ""
 
     if f == 'time':
+        time_string = time_string.upper()
         if "HRS" in time_string:
-            time_string = time_string[:-3]
+            time_string = time_string.replace("HRS", "")
+        if ":" in time_string:
+            time_string = time_string.replace(":","")
         
         if len(time_string) == 1:
             time_string = "00:0" + time_string
@@ -133,7 +163,11 @@ def format_time_date(time_string, f):
         elif len(time_string) == 4:
             time_string = time_string[0:1] + ":" + time_string[2:]
 
-        date_time = datetime.strptime(time_string, '%H:%M').time()
+        try:
+            date_time = datetime.strptime(time_string, '%H:%M').time()
+        
+        except ValueError as value_err:
+            print(value_err.__class__.__name__, value_err, sep=": ")
         
         #Unable to plot values as datetime.time data type. Convert to string
         date_time = str(date_time)
@@ -141,12 +175,21 @@ def format_time_date(time_string, f):
         return date_time
     
     elif f == 'date':
-        date_time = datetime.strptime(time_string, '%d/%m/%Y').date()
+        try:
+            date_time = datetime.strptime(time_string, '%d/%m/%Y').date()
         
+        except ValueError as value_err:
+            print(value_err.__class__.__name__, value_err, sep=": ")
+
         return date_time
 
     elif f == 'A':
-        day_of_the_week = datetime.strptime(time_string, '%d/%m/%Y').weekday()
+        try:
+            day_of_the_week = datetime.strptime(time_string, '%d/%m/%Y').weekday()
+        
+        except ValueError as value_err:
+            print(value_err.__class__.__name__, value_err, sep=": ")
+
         if day_of_the_week == 0:
             date_time = "Monday"
         elif day_of_the_week == 1:
@@ -227,8 +270,8 @@ def populate_lists(filename):
                 
                 road = accident_record[ROAD].upper()
                 road = fill_blank(road)
-                road = format_string(road, "road")
-                # print(road)
+                road = format_road_string(road, "road")
+                print(road)
                 roads.append(road)
             
                 place = accident_record[PLACE].upper()
@@ -269,7 +312,7 @@ def populate_lists(filename):
                 nums_of_victims.append(num_of_victims)
                 
                 unformatted_date = accident_record[DATE]
-                unformatted_date = fill_blank(unformatted_date)
+                unformatted_date = fill_blank_time(unformatted_date)
                 if unformatted_date != "UNKNOWN":
                     date = format_time_date(unformatted_date, 'date')
                     #print(date)
@@ -404,7 +447,7 @@ def main():
     #r = requests.get('https://data.humdata.org/dataset/8288bf4a-1ec3-454d-a201-3b7e4c623063/resource/bcd9ef77-cf9f-4dc0-b3f8-75ad238fb433/download/kenya-accidents-database.xlsx')
     #print(r.status_code)
     populate_lists("kenya-accidents-database.csv")
-    
+    '''
     query_again = "yes"
     while query_again == "yes":
 
@@ -424,10 +467,9 @@ def main():
         for key, value in responses.items():
             if value[0] == "yes":
                 plot_graph(x_list=value[1], x_label=key, chart_type=value[2])
-            
-            #plot_graph(roads, "Road", causes, "Cause")
 
         query_again = input("\nWould you like to make another query? [yes/no]: ")
+    '''
 
 
 if __name__ == "__main__":
