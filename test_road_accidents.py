@@ -139,3 +139,56 @@ class TestUnpackPlotValues:
         y_list = [1, 2]
         with pytest.raises(TypeError):
             unpack_plot_values(x_list, y_list)
+
+
+class TestFillBlank:
+    # Tests that an empty string is replaced with 'UNKNOWN'
+    def test_fill_blank_empty_string(self):
+        assert fill_blank('') == 'UNKNOWN'
+
+    # Tests that a None input is converted to 'UNKNOWN'
+    def test_fill_blank_none_string(self):
+        assert fill_blank(None) == 'UNKNOWN'
+
+    # Tests that a string containing only whitespace is replaced with 'UNKNOWN'
+    def test_fill_blank_whitespace_string(self):
+        assert fill_blank('   ') == 'UNKNOWN'
+
+    # Tests that a string containing only digits is not modified
+    def test_fill_blank_digit_string(self):
+        assert fill_blank('123') == '123'
+
+    # Tests that a string containing special characters is not modified
+    def test_fill_blank_special_char_string(self):
+        assert fill_blank('!@#') == '!@#'
+
+    # Tests that a string containing non-ASCII characters is not modified
+    def test_fill_blank_non_ascii_string(self):
+        assert fill_blank('ñ') == 'ñ'
+
+
+class TestFillBlankTime:
+    # Tests that the function returns the input string when it contains only digits
+    def test_digits_only(self):
+        assert fill_blank_time('123456') == '123456'
+
+    # Tests that the function returns 'UNKNOWN' when the input string contains 'UNKNOWN'
+    def test_contains_unknown(self):
+        assert fill_blank_time('UNKNOWN') == 'UNKNOWN'
+        assert fill_blank_time('123UNKNOWN') == 'UNKNOWN'
+
+    # Tests that the function returns 'UNKNOWN' when the input string is empty
+    def test_empty_string(self):
+        assert fill_blank_time('') == 'UNKNOWN'
+
+    # Tests that the function returns 'UNKNOWN' when the input is None
+    def test_none_input(self):
+        assert fill_blank_time(None) == 'UNKNOWN'
+
+    # Tests that the function returns 'UNKNOWN' when the input string contains only non-digit characters
+    def test_non_digit_input(self):
+        assert fill_blank_time('abcde') == 'UNKNOWN'
+
+    # Tests that the function returns the input string when it contains a mix of digits and non-digits
+    def test_mixed_input(self):
+        assert fill_blank_time('12abc34') == '12abc34'
