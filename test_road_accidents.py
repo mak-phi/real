@@ -6,6 +6,7 @@ from calendar import month_abbr
 from road_accidents import ROAD_USER_CAT
 from road_accidents import CAUSE_CODE
 from road_accidents import VICTIM_AGE
+
 from road_accidents import roads
 from road_accidents import counties
 from road_accidents import places
@@ -14,9 +15,9 @@ from road_accidents import days_of_the_week
 from road_accidents import months
 from road_accidents import road_user_cats
 from road_accidents import causes
-
 from road_accidents import victim_ages
 from road_accidents import nums_of_victims
+
 from road_accidents import populate_lists
 from road_accidents import count_accidents
 from road_accidents import unpack_plot_values
@@ -44,7 +45,7 @@ class TestPopulateLists:
     # Tests that the function populates all the lists correctly
     def test_populate_lists_correctly(self):
         populate_lists('kenya-accidents-database.csv')
-        assert 'NAIROBI-MOMBASA' in roads
+        assert 'NAIROBI-MOMBASA ROAD' in roads
         assert 'NAIROBI' in counties
         assert 'KITUI SCHOOL' in places
         assert '01:00:00' in times
@@ -52,7 +53,7 @@ class TestPopulateLists:
         assert 'June' in months
         assert 'DRIVER' in road_user_cats
         assert '98' in causes
-        assert 20 in victim_ages
+        assert 'A' in victim_ages
         assert 1 in nums_of_victims
 
     # Tests that the function handles invalid file names

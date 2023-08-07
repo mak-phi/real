@@ -104,8 +104,12 @@ def format_road_string(raw_string, category=False):
         
         words = ["STREET", "AVENUE", "DRIVE", "WAY", "HIGHWAY", "BYPASS", "ACCESS", "COURSE", "SCHOOL", "CHURCH", "TOWN", "FERRY", "BEACH", "CENTRE"]
         
-        res = [word for word in words if (word in raw_string)]
-        if bool(res):
+        # res = [word for word in words if (word in raw_string)]
+        # if bool(res):
+        #    raw_string = raw_string
+        # if any(word == (element for element in words) for word in raw_string.split(" ")):
+        #    raw_string = raw_string
+        if any(word in raw_string for word in words):
             raw_string = raw_string
         else:
             if raw_string.find(" ") != -1:
@@ -146,13 +150,14 @@ def fill_blank_time(time_string):
 
 def format_time_date(time_string, f):
     date_time = ""
+    time_string = time_string.strip()
 
     if f == 'time':
         time_string = time_string.upper()
         if "HRS" in time_string:
-            time_string = time_string.replace("HRS", "")
+            time_string = time_string.replace("HRS", "").strip()
         if ":" in time_string:
-            time_string = time_string.replace(":","")
+            time_string = time_string.replace(":","").strip()
         
         if len(time_string) == 1:
             time_string = "00:0" + time_string
